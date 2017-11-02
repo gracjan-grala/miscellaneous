@@ -1,3 +1,7 @@
+# Renames mp3 files found at given path and sets up directory tree of following pattern:
+# ./Artist Name/Album Name/xx. Name of the Song.mp3
+# Usage: idv3_renamer.rb directory [extension]
+
 require 'id3tag'
 require 'fileutils'
 
