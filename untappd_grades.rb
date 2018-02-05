@@ -5,14 +5,15 @@ require 'open-uri'
 require 'nokogiri'
 require 'faraday'
 
-beers = [
+bottles = [
   # beer list goes here
 ]
 base_url = 'https://untappd.com/search?q='
 
-beers.each do |name|
+bottles.each do |name|
   new_name = name
   grade = nil
+  page = nil
 
   while grade == nil && new_name != '' do
     page = Nokogiri::HTML(open("#{base_url}#{URI::escape(new_name)}"))
@@ -21,8 +22,16 @@ beers.each do |name|
   end
 
   if grade
-    puts "#{new_name}, #{grade.content.gsub(/[\(\)]/, '')}"
+    abv = page.css('.beer-item .abv').first.content
+    style = page.css('.beer-item .style').first.content
+
+    puts [
+      new_name,
+      grade.content.gsub(/[\(\)]/, ''),
+      abv.strip!.sub(/\ ABV/, ''),
+      style
+    ].join('; ')
   else
-    puts "#{name}, n/a"
+    puts "#{name} - beer not found"
   end
 end
